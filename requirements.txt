@@ -1,0 +1,8 @@
+qiskit
+qiskit-aer
+qutip
+quantuminspire
+numpy
+scipy
+matplotlib
+jupyterlab
