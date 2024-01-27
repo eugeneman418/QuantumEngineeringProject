@@ -11,18 +11,19 @@ def pauliY(i,N):
 def pauliZ(i,N):
     return qp.tensor([qp.sigmaz() if j == i else qp.identity(2) for j in range(N)])
 
-def PairHamiltonian(N, theta, phi, delta, E, V, Ne):
+def PairHamiltonian(N, theta, phi, delta, E, V, Ne, i = 0, j = 1, dim=2):
+    """phi is a single angle, not a matrix of angles"""
     Gf, _, _ = sp.constants.physical_constants['Fermi coupling constant'] # TODO: check if the units are consistent
     msw = Gf * Ne/(np.sqrt(2)*V)
     J = np.sqrt(2) * Gf/V * (1 - np.cos(phi)) 
     omega = delta/(4 * E * (N-1))
     
-    X1 = pauliX(0,2)
-    X2 = pauliX(1,2)
-    Y1 = pauliY(0,2)
-    Y2 = pauliY(1,2)
-    Z1 = pauliZ(0,2)
-    Z2 = pauliZ(1,2)
+    X1 = pauliX(i,dim)
+    X2 = pauliX(j,dim)
+    Y1 = pauliY(i,dim)
+    Y2 = pauliY(j,dim)
+    Z1 = pauliZ(i,dim)
+    Z2 = pauliZ(j,dim)
     
     H = omega * np.sin(2 * theta) * (X1 + X2) + (msw - omega * np.cos(2 * theta)) * (Z1 + Z2) + J * (X1 * X2 + Y1 * Y2 + Z1 * Z2)
     return H
@@ -76,16 +77,16 @@ def OneBodyHamiltonian(N, theta, delta, E, V, Ne):
             
     return H
 
-def TwoBodyHamiltonian(phi, V):
+def TwoBodyHamiltonian(phi, V, i=0, j=1, N=2):
     Gf, _, _ = sp.constants.physical_constants['Fermi coupling constant'] # TODO: check if the units are consistent
     J = np.sqrt(2) * Gf/V * (1 - np.cos(phi) ) 
     
-    X1 = pauliX(0,2)
-    X2 = pauliX(1,2)
-    Y1 = pauliY(0,2)
-    Y2 = pauliY(1,2)
-    Z1 = pauliZ(0,2)
-    Z2 = pauliZ(1,2)
+    X1 = pauliX(i,N)
+    X2 = pauliX(j,N)
+    Y1 = pauliY(i,N)
+    Y2 = pauliY(j,N)
+    Z1 = pauliZ(i,N)
+    Z2 = pauliZ(j,N)
     
     H = J * (X1 * X2 + Y1 * Y2 + Z1 * Z2)
     return H
